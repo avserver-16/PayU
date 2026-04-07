@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         padding: 24,
         width: "100%",
-        minHeight: 220,
+        minHeight: 200,
         borderRadius: 16
     },
     bankName: {
