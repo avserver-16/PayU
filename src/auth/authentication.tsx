@@ -23,7 +23,7 @@ const Authentication = () => {
 
         {/* Top Section */}
         <View style={styles.contentContainer}>
-          <Logo width={64} height={64} />
+          <Logo width={64} height={64} borderRadius={16}/>
           <View style={styles.textContainer}>
             <Text style={styles.title}>Welcome to PayU</Text>
             <Text style={styles.subtitle}>

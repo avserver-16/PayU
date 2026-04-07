@@ -1,14 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { User } from 'lucide-react-native';
+import GradientBackground from '../../styles/Background';
+import Header from './components/Header';
 
 const ProfilePage = () => {
   return (
-    <View style={styles.container}>
-      <User size={48} color="#007AFF" style={styles.icon} />
-      <Text style={styles.title}>Profile</Text>
-      <Text style={styles.subtitle}>Manage your account</Text>
-    </View>
+    <GradientBackground>
+      <Header title="PayU" />
+    </GradientBackground>
   );
 };
 

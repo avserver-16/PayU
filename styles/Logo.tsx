@@ -4,9 +4,10 @@ import { View, Text, StyleSheet } from "react-native";
 type Props = {
   width: number;
   height: number;
+  borderRadius?: number;
 };
 
-const Logo = ({ width, height }: Props) => {
+const Logo = ({ width, height, borderRadius = 16 }: Props) => {
   return (
     <View
       style={[
@@ -14,6 +15,7 @@ const Logo = ({ width, height }: Props) => {
         {
           width,
           height,
+          borderRadius,
         },
       ]}
     >
@@ -27,7 +29,6 @@ export default Logo;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FAFAFA",
-    borderRadius: 16,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
