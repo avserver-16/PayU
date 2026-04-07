@@ -9,7 +9,7 @@ import {
 import { Eye, EyeOff } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
 
-const Signup = () => {
+const Signup = ({buttonText}: {buttonText?: string}) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
     const navigation = useNavigation();
@@ -46,7 +46,7 @@ const Signup = () => {
             </View>
 
             <TouchableOpacity style={styles.button} onPress={handleNavigateToPayU}>
-                <Text style={styles.buttonText}>Create Account</Text>
+                <Text style={styles.buttonText}>{buttonText||"Create Account"}</Text>
             </TouchableOpacity>
         </View>
     );
