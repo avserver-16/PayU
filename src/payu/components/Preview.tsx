@@ -1,10 +1,14 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Preview: React.FC = () => {
+interface PreviewProps {
+  email: string;
+}
+
+const Preview: React.FC<PreviewProps> = ({ email }) => {
   const data = [
     ['Total Spendings:', '$2000'],
-    ['Email:', 'alex@gmail.com'],
+    ['Email:', email],
     ['Balance:', '$20000'],
   ];
 
@@ -53,7 +57,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   box: {
-    width: '48%',
+    // width: '48%',
   },
 
   // LEFT → Labels

@@ -4,9 +4,10 @@ import { Image, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 type Props = {
     style?: ViewStyle;
+    holderName?: string;
 };
 
-const BankCard = ({ style }: Props) => {
+const BankCard = ({ style, holderName }: Props) => {
     return (
         <LinearGradient
             colors={["#FED4B4", "#3BB9A1"]}
@@ -24,7 +25,7 @@ const BankCard = ({ style }: Props) => {
             <View style={styles.infoContainer}>
                 <View style={styles.expiryContainer}>
                     <Text style={styles.label}>Card Holder Name</Text>
-                    <Text style={styles.value}>Alex</Text>
+                    <Text style={styles.value}>{holderName || 'User'}</Text>
                 </View>
 
                 <View style={styles.cvvContainer}>

@@ -1,13 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import GradientBackground from '../../styles/Background';
 import Header from './components/Header';
 import BankCard from './components/BankCard';
 import ExpenseCard from './components/ExpenseCard';
-
+import { getCurrentUser } from '../../localstorage-services/auth';
+type UserData = {
+  id: string;
+  fullName: string;
+  email: string;
+  createdAt: string;
+};
 const HomePage = () => {
   const [period, setPeriod] = useState<'weekly' | 'monthly'>('weekly');
+  const [user, setUser] = useState<UserData | null>(null);
 
+  useEffect(() => {
+    getCurrentUser().then((data) => {
+      if (data) setUser(data);
+      // console.log(data);
+    });
+  }, []);
   return (
     <GradientBackground>
       <Header title="PayU" />
@@ -18,13 +31,13 @@ const HomePage = () => {
       >
         {/* Greeting */}
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingTitle}>Hey, Alex</Text>
+          <Text style={styles.greetingTitle}>Hey, {user?.fullName || 'User'}</Text>
           <Text style={styles.greetingSubtitle}>Add your yesterday's expense</Text>
         </View>
 
         {/* Bank Card */}
         <View style={styles.cardContainer}>
-          <BankCard />
+          <BankCard holderName={user?.fullName || 'User'} />
         </View>
 
         {/* Expenses Section */}
@@ -54,8 +67,19 @@ const HomePage = () => {
 
           {/* Expense Cards */}
           <View style={styles.expenseList}>
-            <ExpenseCard title="FOOD" description="Lesser than last week" price="$1000" />
-            <ExpenseCard title="TRAVEL" description="More than last week" price="$1000" />
+            {period === 'weekly' ? (
+              <>
+                <ExpenseCard title="FOOD" description="Lesser than last week" price="$1000" />
+                <ExpenseCard title="TRAVEL" description="More than last week" price="$1000" />
+                <ExpenseCard title="BILLS" description="Bills paid" price="$2000" />
+                <ExpenseCard title="RENT" description="Rent paid" price="$1109" />
+
+              </>
+            ) : (
+              <>
+                <ExpenseCard title="SHOPPING" description="Lesser than last month" price="$220" />
+              </>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -83,7 +107,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     marginBottom: 48,
-    paddingHorizontal:16
+    paddingHorizontal: 16
   },
   sectionTitle: {
     fontSize: 16,
