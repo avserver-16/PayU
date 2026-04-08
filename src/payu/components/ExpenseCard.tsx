@@ -1,19 +1,20 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { Image, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View, ViewStyle } from "react-native";
 
 type Props = {
     style?: ViewStyle;
     title?: string;
     description?: string;
     price?: string;
+    colors?: string[];
 };
 
-const ExpenseCard = ({ style, title, description, price }: Props) => {
+const ExpenseCard = ({ style, title, description, price, colors = ["#192D29", "#262626", "#0A0A0A"] }: Props) => {
     return (
         <LinearGradient
-            colors={["#192D29", "#262626", "#0A0A0A"]}
+            colors={colors as [string, string, string]}
             start={{ x: 0, y: 0.3 }}
             end={{ x: 0.8, y: 1 }}
             style={[styles.container, style]}
@@ -47,9 +48,9 @@ const ExpenseCard = ({ style, title, description, price }: Props) => {
                     </View>
                     <View style={{flexDirection:'row',gap:16 ,left:-40}}>
                         <Ionicons name="star-outline" size={16} color="#FAFAFA" style={{top:8}}/>
-                        <View style={{ alignItems: 'flex-end',padding:8,backgroundColor:"#262626",borderRadius:8 }}>
+                        <TouchableOpacity style={{ alignItems: 'flex-end',padding:8,backgroundColor:"#262626",borderRadius:8 }}>
                             <Text style={styles.amount}>{price || '₹2,500'}</Text>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
