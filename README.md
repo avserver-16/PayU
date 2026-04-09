@@ -1,5 +1,17 @@
 # PayU - Personal Finance Management App
+Click on the image to see demo video
+<p align="center">
+  <a href="https://youtube.com/shorts/b43_qBcj13o?feature=share">
+    <img src="PayU.png" alt="PayU Banner" width="300"/>
+  </a>
+</p>
 
+## Download on android
+
+ <a href="https://expo.dev/accounts/avishcreates-16/projects/payu/builds/c7a40034-c93d-4ee2-bd0a-36eb3d9e1bb0">
+ PayU
+  </a>
+  
 ## Overview
 
 PayU is a comprehensive personal finance management mobile application built with React Native and Expo. It provides users with tools to track expenses, manage multiple currencies, monitor credit scores, and gain insights into their financial health.
