@@ -240,10 +240,19 @@ const HomePage = () => {
       const transactions = await getTransactions();
       console.log("transactions", transactions);
       setTransactions(transactions);
+      await loadFinanceData();
     };
-
     init();
   }, []);
+
+
+  const loadFinanceData = async () => {
+    const profile = await getFinanceProfile();
+    setProfile(profile);
+
+    const transactions = await getTransactions();
+    setTransactions(transactions);
+  };
 
   return (
     <GradientBackground>
@@ -253,12 +262,18 @@ const HomePage = () => {
       {/* First-entry finance setup popup */}
       <FinanceSetupModal
         visible={showSetup}
-        onComplete={() => setShowSetup(false)}
+        onComplete={async () => {
+          setShowSetup(false);
+          await loadFinanceData();
+        }}
       />
-     <AddTransactionModal 
-      showAddTransactionModal={showAddTransactionModal}
-      setShowAddTransactionModal={setShowAddTransactionModal}
-     />
+      <AddTransactionModal
+        showAddTransactionModal={showAddTransactionModal}
+        setShowAddTransactionModal={setShowAddTransactionModal}
+        onTransactionAdded={async () => {
+          await loadFinanceData();
+        }}
+      />
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
@@ -309,8 +324,13 @@ const HomePage = () => {
               </>
             ) : (
               <>
-                {transactions.map((transaction) => (
-                  <ExpenseCard key={transaction.id} title={transaction.category} description={transaction.note} price={`$${transaction.amount}`} />
+                {transactions.slice(0, 3).map((transaction) => (
+                  <ExpenseCard
+                    key={transaction.id}
+                    title={transaction.category}
+                    description={transaction.note}
+                    price={`$${transaction.amount}`}
+                  />
                 ))}
               </>
             )}

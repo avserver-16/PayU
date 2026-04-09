@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Eye, EyeOff } from "lucide-react-native";
 import { useNavigation } from "@react-navigation/native";
-import { signUp } from "../../localstorage-services/auth";
+import { deleteAccount, getCurrentUser, signUp, updateUserDetails } from "../../localstorage-services/auth";
 
 const Signup = ({ buttonText }: { buttonText?: string }) => {
   const [fullName, setFullName] = useState("");
@@ -22,6 +22,50 @@ const Signup = ({ buttonText }: { buttonText?: string }) => {
   const [error, setError] = useState<string | null>(null);
 
   const navigation = useNavigation();
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const user = await getCurrentUser();
+      if (user) {
+        setCurrentUser(user);
+        setFullName(user.fullName);
+        setEmail(user.email);
+      }
+    };
+
+    loadUser();
+  }, []);
+
+  const updateProfile = async () => {
+    setError(null);
+    setLoading(true);
+// deleteAccount("avish.vijay2021@gmail.com")
+    try {
+      if (!currentUser?.id) {
+        setError("User not found.");
+        return;
+      }
+
+      const result = await updateUserDetails(currentUser.id, {
+        fullName,
+        email,
+      });
+
+      if (!result.success) {
+        setError(result.message);
+        return;
+      }
+
+      // ✅ success
+      navigation.goBack(); // or navigate("Profile")
+    } catch (e) {
+      console.error(e);
+      setError("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSignup = async () => {
     setError(null);
@@ -115,13 +159,22 @@ const Signup = ({ buttonText }: { buttonText?: string }) => {
 
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
-        onPress={handleSignup}
+        onPress={() => {
+          if (buttonText === "Update Profile") {
+            // updateProfile();
+            navigation.navigate("HomePage" as never);
+          } else {
+            handleSignup();
+            // updateProfile();
+
+          }
+        }}
         disabled={loading}
       >
         {loading ? (
           <ActivityIndicator size="small" color="#171717" />
         ) : (
-          <Text style={styles.buttonText}>{buttonText ?? "Create Account"}</Text>
+          <Text style={styles.buttonText}>{buttonText ? buttonText + " (Not yet working)" : "Create Account"}</Text>
         )}
       </TouchableOpacity>
     </View>

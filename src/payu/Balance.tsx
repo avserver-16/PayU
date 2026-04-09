@@ -7,8 +7,14 @@ import SemiCircle from './components/Semicircle';
 import ExpenseCard from './components/ExpenseCard';
 import TimelineBarChart from './components/GradientBarGraph';
 import SemiCirclePieChart from './components/Semicircle';
+import { getFinanceProfile } from '../../localstorage-services/finances';
+import { recalculateCreditScore } from '../../localstorage-services/finances';
 
 const BalancePage = () => {
+
+  const financeProfile = getFinanceProfile();
+  const creditScore = recalculateCreditScore();
+  console.log('creditScore', creditScore);
   return (
     <GradientBackground>
       <Header title="PayU" />
@@ -29,7 +35,7 @@ const BalancePage = () => {
             gapDeg={5}
             valueText={660}
             data={[
-              { label: "Good", value: 600, color: "#3FB9A2"},
+              { label: "Good", value: 600, color: "#3FB9A2" },
               { label: "Better", value: 200, color: "#EE89DF", colorEnd: "#EE89DF" },
               { label: "Best", value: 150, color: "#74B8EF" },
               { label: "Marvelous", value: 50, color: "#F6D2B3" },

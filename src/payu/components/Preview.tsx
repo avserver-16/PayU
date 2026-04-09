@@ -34,7 +34,7 @@ const Preview: React.FC<PreviewProps> = ({ email, financeProfile }) => {
                     isValue ? styles.valueText : styles.labelText,
                   ]}
                 >
-                  {isValue && (item === financeProfile?.monthlyExpenses*12||item === financeProfile?.netWorth) ? `${financeProfile.currency}${' '}${item}` : item}
+                  {isValue && (item === financeProfile?.monthlyExpenses*12||item === financeProfile?.netWorth) ? `${financeProfile.currency}${' '}${item.toFixed(2)}` : item}
                 </Text>
               </View>
             );

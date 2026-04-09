@@ -12,6 +12,7 @@
  */
 
 import * as SecureStore from "expo-secure-store";
+import { clearFinances } from "./finances";
 
 // ─── Storage Keys ─────────────────────────────────────────────────────────────
 
@@ -334,7 +335,7 @@ export async function updatePassword(
 
 export async function deleteAccount(
   email: string,
-  password: string
+  // password: string
 ): Promise<AuthResult> {
   try {
     const users = await getUsers();
@@ -343,15 +344,95 @@ export async function deleteAccount(
     );
     if (index === -1)
       return { success: false, message: "User not found." };
-    if (users[index].passwordHash !== hashPassword(password))
-      return { success: false, message: "Incorrect password." };
+    // if (users[index].passwordHash !== hashPassword(password))
+      // return { success: false, message: "Incorrect password." };
 
     users.splice(index, 1);
+    await clearFinances();
+    await Promise.all([
+      storageDelete(KEYS.TOKEN),
+      storageDelete(KEYS.CURRENT_USER),
+    ]);
     await saveUsers(users);
     await signOut();
     return { success: true, message: "Account deleted." };
   } catch (e) {
     console.error("[auth] deleteAccount error:", e);
+    return { success: false, message: "Something went wrong. Please try again." };
+  }
+}
+
+export async function updateUserDetails(
+  userId: string,
+  updates: { fullName?: string; email?: string }
+): Promise<AuthResult> {
+  try {
+    const users = await getUsers();
+    const index = users.findIndex((u) => u.id === userId);
+
+    if (index === -1) {
+      return { success: false, message: "User not found." };
+    }
+
+    // Validate name
+    // if (updates.fullName !== undefined) {
+    //   if (!updates.fullName.trim()) {
+    //     return { success: false, message: "Full name cannot be empty." };
+    //   }
+    //   users[index].fullName = updates.fullName.trim();
+    // }
+
+    // Validate email
+    if (updates.email !== undefined) {
+      const email = updates.email.toLowerCase().trim();
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return { success: false, message: "Invalid email format." };
+      }
+
+      const emailExists = users.some(
+        (u, i) => i !== index && u.email === email
+      );
+
+      if (emailExists) {
+        return { success: false, message: "Email already in use." };
+      }
+
+      users[index].email = email;
+    }
+
+    // Save updated users
+    await saveUsers(users);
+
+    // Update current session if this user is logged in
+    const currentUserJson = await storageGet(KEYS.CURRENT_USER);
+    if (currentUserJson) {
+      const currentUser = JSON.parse(currentUserJson);
+
+      if (currentUser.id === userId) {
+        const updatedUser = {
+          ...currentUser,
+          ...updates,
+        };
+
+        await storageSet(KEYS.CURRENT_USER, JSON.stringify(updatedUser));
+      }
+    }
+
+    const updatedUser = users[index];
+    const { passwordHash, ...safeUser } = updatedUser;
+
+    return {
+      success: true,
+      message: "User details updated successfully.",
+      session: {
+        user: safeUser,
+        token: (await storageGet(KEYS.TOKEN)) || "",
+        loginAt: new Date().toISOString(),
+      },
+    };
+  } catch (e) {
+    console.error("[auth] updateUserDetails error:", e);
     return { success: false, message: "Something went wrong. Please try again." };
   }
 }

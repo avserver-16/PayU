@@ -6,7 +6,7 @@ import Header from './components/Header';
 import Logo from '../../styles/Logo';
 import Preview from './components/Preview';
 import Signup from '../auth/Signup';
-import { getCurrentUser } from '../../localstorage-services/auth';
+import { deleteAccount, getCurrentUser, signOut } from '../../localstorage-services/auth';
 import { getFinanceProfile } from '../../localstorage-services/finances';
 
 type UserData = {
@@ -16,10 +16,10 @@ type UserData = {
   createdAt: string;
 };
 
-const ProfilePage = () => {
+const ProfilePage = ({ navigation }: { navigation: any }) => {
   const [period, setPeriod] = useState<'preview' | 'edit'>('preview');
   const [user, setUser] = useState<UserData | null>(null);
-const [financeProfile, setFinanceProfile] = useState<any | null>(null);
+  const [financeProfile, setFinanceProfile] = useState<any | null>(null);
   useEffect(() => {
     getCurrentUser().then((data) => {
       if (data) setUser(data);
@@ -30,6 +30,20 @@ const [financeProfile, setFinanceProfile] = useState<any | null>(null);
       console.log(data);
     });
   }, []);
+
+  const handleLogout = () => {
+    signOut();
+    navigation.navigate('Authentication');
+  };
+
+  const handleDeleteAccount = () => {
+    deleteAccount(user?.email ?? '').then((result) => {
+      if (result.success) {
+        signOut();
+        navigation.navigate('Authentication');
+      }
+    });
+  };
 
   return (
     <GradientBackground>
@@ -68,6 +82,18 @@ const [financeProfile, setFinanceProfile] = useState<any | null>(null);
           </View>
         )}
       </View>
+      <TouchableOpacity style={{ width: '100%', height: 36, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FF6B6B', position: 'absolute', bottom: 82, borderRadius: 100, alignSelf: 'center' }}
+        onPress={() => {
+          handleLogout();
+        }}>
+        <Text style={{ color: '#fff', fontSize: 16, fontWeight: 'bold' }}>Logout</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={{ width: '100%', height: 36, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', position: 'absolute', bottom: 24, borderRadius: 100, alignSelf: 'center' }}
+        onPress={() => {
+          handleDeleteAccount();
+        }}>
+        <Text style={{ color: '#FF6B6B', fontSize: 16, fontWeight: 'bold' }}>Delete Account</Text>
+      </TouchableOpacity>
     </GradientBackground>
   );
 };

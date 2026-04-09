@@ -55,6 +55,7 @@ interface AddTransactionModalProps {
   showAddTransactionModal: boolean;
   setShowAddTransactionModal: (show: boolean) => void;
   onSuccess?: (transaction: Transaction) => void;
+  onTransactionAdded?: () => void;
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -63,6 +64,7 @@ const AddTransactionModal = ({
   showAddTransactionModal,
   setShowAddTransactionModal,
   onSuccess,
+  onTransactionAdded,
 }: AddTransactionModalProps) => {
   const [type, setType] = useState<TransactionType>('expense');
   const [currency, setCurrency] = useState<Currency>('USD');
@@ -121,6 +123,7 @@ const AddTransactionModal = ({
     }
 
     if (result.data) onSuccess?.(result.data);
+    onTransactionAdded?.();
     handleClose();
   };
 
