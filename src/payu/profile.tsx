@@ -7,6 +7,7 @@ import Logo from '../../styles/Logo';
 import Preview from './components/Preview';
 import Signup from '../auth/Signup';
 import { getCurrentUser } from '../../localstorage-services/auth';
+import { getFinanceProfile } from '../../localstorage-services/finances';
 
 type UserData = {
   id: string;
@@ -18,11 +19,15 @@ type UserData = {
 const ProfilePage = () => {
   const [period, setPeriod] = useState<'preview' | 'edit'>('preview');
   const [user, setUser] = useState<UserData | null>(null);
-
+const [financeProfile, setFinanceProfile] = useState<any | null>(null);
   useEffect(() => {
     getCurrentUser().then((data) => {
       if (data) setUser(data);
       // console.log(data);
+    });
+    getFinanceProfile().then((data) => {
+      setFinanceProfile(data);
+      console.log(data);
     });
   }, []);
 
@@ -56,7 +61,7 @@ const ProfilePage = () => {
           </TouchableOpacity>
         </View>
         {period === 'preview' ? (
-          <Preview email={user?.email ?? ''} />
+          <Preview email={user?.email ?? ''} financeProfile={financeProfile} />
         ) : (
           <View style={{ flex: 1, top: -24 }}>
             <Signup buttonText="Update Profile" />
