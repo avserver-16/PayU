@@ -4,9 +4,15 @@ import { Image, StyleSheet, Text, View, ViewStyle } from "react-native";
 
 type Props = {
     style?: ViewStyle;
+    holderName?: string;
+    financeProfile?: any;
 };
 
-const BankCard = ({ style }: Props) => {
+const BankCard = ({ style, holderName, financeProfile }: Props) => {
+    // console.log("financeProfile", financeProfile);
+    function formatNumber(str: string) {
+        return str.replace(/(.{4})/g, '$1 ').trim();
+    }
     return (
         <LinearGradient
             colors={["#FED4B4", "#3BB9A1"]}
@@ -15,16 +21,16 @@ const BankCard = ({ style }: Props) => {
             style={[styles.container, style]}
         >
             <View style={styles.content}>
-                <Text style={styles.bankName}>ADRBank</Text>
+                <Text style={styles.bankName}>{financeProfile?.bankName || 'ADRBank'}</Text>
                 <Image source={require("../../../styles/Banklogo.png")} style={{ width: 24, height: 24 }} />
             </View>
             <View style={styles.cardNumberContainer}>
-                <Text style={styles.cardNumber}>8763 1111 2222 0329</Text>
+                <Text style={styles.cardNumber}>{formatNumber(financeProfile?.bankCode || '8763 1111 2222 0329')}</Text>
             </View>
             <View style={styles.infoContainer}>
                 <View style={styles.expiryContainer}>
                     <Text style={styles.label}>Card Holder Name</Text>
-                    <Text style={styles.value}>Alex</Text>
+                    <Text style={styles.value}>{holderName || 'User'}</Text>
                 </View>
 
                 <View style={styles.cvvContainer}>

@@ -43,8 +43,8 @@ const ExpenseCard = ({ style, title, description, price, colors = ["#192D29", "#
                 <Image source={require("../../../styles/Banklogo.png")} style={{ width: 24, height: 24 }} />
                 <View style={styles.content}>
                     <View style={{ gap: 8 }}>
-                        <Text style={styles.bankName}>{title || 'FOOD'}</Text>
-                        <Text style={styles.description}>{description || 'Lesser than last week'}</Text>
+                        <Text style={styles.bankName}>{title?.toUpperCase() || 'FOOD'}</Text>
+                        <Text style={styles.description}>{description?.split(' ').slice(0, 3).join(' ') + '..' || 'Lesser than last week'}</Text>
                     </View>
                     <View style={{flexDirection:'row',gap:16 ,left:-40}}>
                         <Ionicons name="star-outline" size={16} color="#FAFAFA" style={{top:8}}/>

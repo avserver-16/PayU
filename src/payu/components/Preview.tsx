@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const Preview: React.FC = () => {
+interface PreviewProps {
+  email: string;
+  financeProfile: any;
+}
+
+const Preview: React.FC<PreviewProps> = ({ email, financeProfile }) => {
   const data = [
-    ['Total Spendings:', '$2000'],
-    ['Email:', 'alex@gmail.com'],
-    ['Balance:', '$20000'],
+    ['Total Spendings:', financeProfile?.monthlyExpenses*12 || '$0'],
+    ['Email:', email],
+    ['Balance:', financeProfile?.netWorth || '$0'],
   ];
 
   return (
@@ -29,13 +34,14 @@ const Preview: React.FC = () => {
                     isValue ? styles.valueText : styles.labelText,
                   ]}
                 >
-                  {item}
+                  {isValue && (item === financeProfile?.monthlyExpenses*12||item === financeProfile?.netWorth) ? `${financeProfile.currency}${' '}${item.toFixed(2)}` : item}
                 </Text>
               </View>
             );
           })}
         </View>
       ))}
+      <Text style={styles.disclaimer}>Disclaimer: Data is annually calculated over a period of 1 year.</Text>
     </View>
   );
 };
@@ -53,7 +59,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   box: {
-    width: '48%',
+    // width: '48%',
   },
 
   // LEFT → Labels
@@ -73,5 +79,10 @@ const styles = StyleSheet.create({
     color: '#FAFAFA',
     fontSize: 16,
     fontWeight: '600',
+  },
+  disclaimer: {
+    color: 'rgba(255, 255, 255, 0.3)',
+    fontSize: 12,
+    marginTop: 12,
   },
 });
